@@ -1,0 +1,53 @@
+<div *ngIf="showTitle" class="showcase-info-container mb-1 mt-3">
+    <div class="title-container">
+        <span class="title color-magenta">Let people know about {{ targetName }}</span>
+    </div>
+</div>
+
+<div class="d-flex">
+    <!-- LinkedIn -->
+    <a
+        href="https://www.linkedin.com/sharing/share-offsite/?url={{ completeUrl }}"
+        rel="noopener"
+        target="_blank"
+        class="social-btn linkedin mr-1"
+    >
+        <img src="../../../../assets/img/socials/linkedIn.png" alt="LinkedIn" />
+        Share
+    </a>
+    <script src="https://platform.linkedin.com/in.js" type="text/javascript">
+        lang: en_US
+    </script>
+    <script type="IN/Share" data-url="https://www.linkedin.com"></script>
+
+    <!-- <br> -->
+
+    <!-- Twitter -->
+    <a
+        href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+        target="_blank"
+        class="social-btn twitter-share-button mr-1"
+        data-size="large"
+        data-lang="en"
+        data-show-count="false"
+    >
+        <img src="../../../../assets/img/socials/twitter.png" alt="Twitter" />
+        Tweet
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    <!-- <br> -->
+
+    <!-- Facebook -->
+    <iframe
+        src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=large&width=77&height=28&appId"
+        width="77"
+        height="28"
+        class="mr-1"
+        style="border: none; overflow: hidden"
+        scrolling="no"
+        frameborder="0"
+        allowTransparency="true"
+        allow="encrypted-media"
+    ></iframe>
+</div>

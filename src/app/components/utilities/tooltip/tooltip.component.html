@@ -1,0 +1,8 @@
+<span
+    [class]="'card-user-info-content tooltip ' + class"
+    [ngClass]="{ 'tooltip-wide': tooltipWide }"
+    [attr.data-tooltip]="tooltipContent"
+>
+    <span *ngIf="icon" class="material-icons">{{ icon }}</span>
+    <span>{{ titleContent }}</span>
+</span>

@@ -1,0 +1,100 @@
+<div *ngIf="paper" class="showcase">
+    <div class="showcase-title-container">
+        <span class="showcase-title mt-0-imp">
+            <!-- Published Date -->
+            <div class="color-grey font-size-0-8">
+                Published {{ moment(paper.published_at).format("D MMM YYYY") }}
+            </div>
+
+            <div
+                class="d-flex justify-content-space-between align-items-center flex-sm-column"
+            >
+                <div
+                    class="
+                        d-flex
+                        justify-content-flex-start
+                        align-items-baseline
+                        flex-sm-column
+                    "
+                >
+                    <!-- Title -->
+                    <span>{{ paper.title }}</span>
+                </div>
+
+                <!-- Framework -->
+                <div class="d-flex align-items-center">
+                    <span framework [frameworkTitle]="paper.framework">{{
+                        paper.framework
+                    }}</span>
+                </div>
+            </div>
+        </span>
+
+        <!-- Authors -->
+        <div *ngIf="paper.authors" class="my-1">
+            <div class="showcase-info-container">
+                <div class="title-container">
+                    <span class="title">Authors</span>
+                </div>
+            </div>
+
+            <span class="font-size-0-9 color-grey-darkened">{{
+                paper.authors | combineListElements: 1:false
+            }}</span>
+        </div>
+    </div>
+
+    <!-- Links -->
+    <div class="my-1">
+        <a
+            *ngIf="paper.url_pdf"
+            [href]="paper.url_pdf"
+            target="_blank"
+            class="btn btn-solid-magenta color-white mr-1"
+        >
+            <span class="material-icons btn-icon">description</span>
+            PDF
+        </a>
+
+        <a
+            *ngIf="paper.repo_url"
+            [href]="paper.repo_url"
+            target="_blank"
+            class="btn btn-solid-magenta color-white"
+        >
+            <span class="material-icons btn-icon">code</span>
+            Repo
+        </a>
+    </div>
+
+    <!-- Main Tabs -->
+    <div class="showcase-section mt-1 p-0-imp">
+        <tabs [tabsLg]="true" [showSeparator]="true">
+            <!-- Abstract -->
+            <tab tabTitle="Abstract" [spaced]="true">
+                <div class="showcase-info-container">
+                    <div class="title-container">
+                        <span class="title">Abstract</span>
+                    </div>
+                </div>
+
+                <span class="font-size-0-9 color-grey-darkened">{{ paper.abstract }}</span>
+            </tab>
+        </tabs>
+    </div>
+
+    <!-- Tasks -->
+    <div *ngIf="paper.tasks.length" class="my-2">
+        <div class="showcase-info-container">
+            <div class="title-container">
+                <span class="title">Tasks</span>
+            </div>
+        </div>
+
+        <span
+            *ngFor="let task of paper.tasks"
+            class="alert alert-blue alert-sm alert-inline font-bold"
+            >{{ task }}</span
+        >
+    </div>
+</div>

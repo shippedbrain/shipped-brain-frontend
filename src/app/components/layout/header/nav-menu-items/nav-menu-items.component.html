@@ -1,0 +1,31 @@
+<ng-container *ngFor="let navItem of navMenuItems">
+    <ng-container *ngIf="navItem.isDropdown; else notDropdown">
+        <div class="nav-item nav-item-hide-sm dropdown-container mr-1">
+            <span class="dropdown-toggle">
+                <span class="dropdown-text">
+                    {{ navItem.title }} <span class="material-icons">expand_more</span>
+                </span>
+            </span>
+
+            <div class="dropdown-menu">
+                <a
+                    *ngFor="let dropdownItem of navItem.children"
+                    [routerLink]="dropdownItem.route"
+                    class="dropdown-item dropdown-link"
+                    >{{ dropdownItem.title }}</a
+                >
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-template #notDropdown>
+        <div class="nav-item nav-item-hide-sm mr-1">
+            <a
+                [routerLink]="navItem.route"
+                [queryParams]="navItem.queryParams"
+                class="nav-link"
+                >{{ navItem.title }}</a
+            >
+        </div>
+    </ng-template>
+</ng-container>

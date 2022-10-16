@@ -1,0 +1,134 @@
+<small>Showcase</small>
+<h1 class="color-magenta">Sentiment Analysis</h1>
+<p>
+    This example takes a random Elon Musk Tweet and runs it against the
+    <a
+        href="https://app.shippedbrain.com/models/sentiment-analysis/1"
+        class="link link-magenta"
+        >Sentiment Analysis</a
+    >
+    model to identify if the Tweet has a positive or negative sentiment.
+</p>
+
+<button
+    class="btn btn-solid-twitter-blue color-white mt-2"
+    [ngClass]="{ 'btn-loading': loading.tweet }"
+    [disabled]="loading.tweet || !isLoggedIn"
+    (click)="getRandomTweet()"
+>
+    <span *ngIf="!loading.tweet">New Tweet</span>
+    <app-loading-icon *ngIf="loading.tweet"></app-loading-icon>
+</button>
+
+<div class="mt-2">
+    <small class="font-bold">Elon says:</small>
+    <h3>
+        <em class="color-twitter-blue">"{{ tweet }}"</em>
+    </h3>
+
+    <button
+        type="button"
+        class="btn btn-solid-magenta color-white mt-1"
+        [ngClass]="{ 'btn-loading': loading.prediction }"
+        [disabled]="loading.prediction || !isLoggedIn"
+        (click)="makePrediction()"
+    >
+        <span *ngIf="!loading.prediction">Analyse sentiment</span>
+        <app-loading-icon *ngIf="loading.prediction"></app-loading-icon>
+    </button>
+
+    <div *ngIf="!isLoggedIn">
+        <small
+            >It looks like you're not signed in! If you already have an account please
+            <a
+                routerLink="/login"
+                [queryParams]="{ returnUrl: '/showcase/sentiment-analysis' }"
+                class="link link-magenta"
+                >sign in</a
+            >. Or
+            <a routerLink="/register" target="_blank" class="link link-magenta">signup</a> for
+            free!</small
+        >
+    </div>
+</div>
+
+<app-info-message
+    *ngIf="error.prediction"
+    type="error"
+    [content]="error.prediction"
+></app-info-message>
+
+<!-- Result -->
+<h2
+    *ngIf="!error.prediction"
+    class="mt-1 text-center"
+    [ngClass]="{
+        'color-green': sentiment.label === 'positive',
+        'color-red': sentiment.label === 'negative'
+    }"
+>
+    <div class="w-100">
+        <span *ngIf="sentiment.label === 'positive'" class="material-icons icon-lg"
+            >sentiment_very_satisfied</span
+        >
+        <span *ngIf="sentiment.label === 'negative'" class="material-icons icon-lg"
+            >sentiment_very_dissatisfied</span
+        >
+        <span
+            *ngIf="!sentiment.label"
+            class="material-icons icon-lg"
+            [ngClass]="{ 'rainbow-color': loading.prediction }"
+            >sentiment_neutral</span
+        >
+    </div>
+    <div *ngIf="sentiment.label === 'positive'" class="w-100">
+        Sentiment is<span class="font-bold"> {{ sentiment.label }}</span>
+    </div>
+    <div *ngIf="sentiment.label === 'negative'" class="w-100">
+        Sentiment is<span class="font-bold"> {{ sentiment.label }}</span>
+    </div>
+    <div *ngIf="loading.prediction" class="w-100 rainbow-color">Analysing sentiment</div>
+    <div *ngIf="!sentiment.label && !loading.prediction" class="w-100">
+        Ready to analyse sentiment
+    </div>
+</h2>
+
+<!-- API endpoint -->
+<div class="mt-1">
+    <details open>
+        <summary class="font-size-0-8">
+            Model's API endpoint
+            <span class="material-icons">expand_more</span>
+        </summary>
+
+        <div class="code-container">
+            <pre class="p-0-imp font-size-0-9 code">{{ apiEndpoint }}</pre>
+        </div>
+    </details>
+</div>
+
+<!-- Prediction request -->
+<div>
+    <details open>
+        <summary class="font-size-0-8">
+            Request data
+            <span class="material-icons">expand_more</span>
+        </summary>
+        <div class="code-container">
+            <pre class="p-0-imp font-size-0-9 code">{{ predictionRequest }}</pre>
+        </div>
+    </details>
+</div>
+
+<!-- Prediction response -->
+<div>
+    <details open>
+        <summary class="font-size-0-8">
+            Raw response
+            <span class="material-icons">expand_more</span>
+        </summary>
+        <div class="code-container">
+            <pre class="p-0-imp font-size-0-9 code">{{ predictionResponse }}</pre>
+        </div>
+    </details>
+</div>

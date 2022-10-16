@@ -1,0 +1,19 @@
+<app-sidebar-nav></app-sidebar-nav>
+
+<main class="sidebar-side-content-container">
+    <div *ngIf="user" class="sidebar-side-content">
+        <h2 class="mb-2">Likes</h2>
+
+        <div class="row">
+            <div *ngIf="modelLikes" class="col-12">
+                <app-datatables
+                    tableID="tableLikedModels"
+                    title="Models you liked"
+                    [columnHeadings]="modelLikesColumnHeadings"
+                    [data]="modelLikesData"
+                    [columns]="modelLikesColumnsCustom"
+                ></app-datatables>
+            </div>
+        </div>
+    </div>
+</main>

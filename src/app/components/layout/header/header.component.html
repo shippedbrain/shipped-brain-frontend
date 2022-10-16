@@ -1,0 +1,155 @@
+<nav class="navbar" id="navbar" [ngClass]="{ 'navbar-border': !isFeed }">
+    <div class="container">
+        <div class="nav-items-container">
+            <!-- Nav Items Left -->
+            <div class="d-flex align-items-center">
+                <div class="nav-item mr-2">
+                    <app-brand></app-brand>
+                </div>
+
+                <app-nav-menu-items [navMenuItems]="navItemsLeft"></app-nav-menu-items>
+
+                <!-- Search -->
+                <div [hidden]="!showSearchInput" class="nav-item nav-search mr-2">
+                    <div class="form-control-container search">
+                        <span class="material-icons">search</span>
+
+                        <div class="form-group m-0-imp">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Search"
+                                #searchInput
+                            />
+
+                            <div
+                                *ngIf="searchInput.value"
+                                class="cancel-container"
+                                (click)="clearSearch()"
+                            >
+                                <span class="material-icons cancel-btn">cancel</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nav Items Right -->
+            <div class="d-flex align-items-center">
+                <!-- Large screen menu -->
+                <app-nav-menu-items [navMenuItems]="navItemsRight"></app-nav-menu-items>
+
+                <!-- Mobile menu -->
+                <div class="nav-item dropdown-container navbar-dots-sm">
+                    <div class="nav-icon dropdown-toggle">
+                        <span class="material-icons">menu</span>
+                    </div>
+
+                    <div class="dropdown-menu">
+                        <a
+                            *ngFor="let navItemResponsive of navItemsResponsive"
+                            [routerLink]="navItemResponsive.route"
+                            [queryParams]="navItemResponsive.queryParams"
+                            class="dropdown-item dropdown-link"
+                            >{{ navItemResponsive.title }}</a
+                        >
+
+                        <!-- Not logged in small screen -->
+                        <ng-container *ngIf="!isLoggedIn; else loggedIn">
+                            <div class="dropdown-divider"></div>
+
+                            <a routerLink="/login" class="dropdown-item dropdown-link"
+                                >Sign In</a
+                            >
+                            <a routerLink="/register" class="dropdown-item dropdown-link"
+                                >Create Account</a
+                            >
+                        </ng-container>
+                        <ng-template #loggedIn>
+                            <div class="dropdown-divider"></div>
+                        </ng-template>
+
+                        <!-- Logged in small screens -->
+                        <ng-container *ngIf="isLoggedIn">
+                            <a
+                                routerLink="/profiles/{{ user.username }}"
+                                class="dropdown-item dropdown-link"
+                            >
+                                <span class="dropdown-text"
+                                    >{{
+                                        user.name | getWordFromString | getPossessiveEnding
+                                    }}
+                                    Profile</span
+                                >
+                            </a>
+                            <a
+                                routerLink="/profiles/{{ user.username }}/edit"
+                                class="dropdown-item dropdown-link"
+                                >Account Settings</a
+                            >
+
+                            <div class="dropdown-divider"></div>
+
+                            <a class="dropdown-item dropdown-link" (click)="logout()"
+                                >Sign Out</a
+                            >
+                        </ng-container>
+                    </div>
+                </div>
+
+                <!-- User dropdown -->
+                <div *ngIf="isLoggedIn" class="nav-item nav-item-hide-sm dropdown-container">
+                    <span class="dropdown-toggle">
+                        <img
+                            *ngIf="user.photo; else showDefaultImage"
+                            [src]="user.photo | safeHtml"
+                            [alt]="user.name"
+                            class="dropdown-thumbnail"
+                        />
+                        <ng-template #showDefaultImage>
+                            <ngx-avatar
+                                name="{{ user.name }}"
+                                class="dropdown-thumbnail"
+                            ></ngx-avatar>
+                        </ng-template>
+
+                        <span class="dropdown-text"
+                            >{{ user.name | getWordFromString }}
+                            <span class="material-icons">expand_more</span></span
+                        >
+                    </span>
+
+                    <div class="dropdown-menu">
+                        <a
+                            routerLink="/profiles/{{ user.username }}"
+                            class="dropdown-item dropdown-link"
+                            >{{
+                                user.name | getWordFromString | getPossessiveEnding
+                            }}
+                            Profile</a
+                        >
+                        <a
+                            routerLink="/profiles/{{ user.username }}/edit"
+                            class="dropdown-item dropdown-link"
+                            >Account Settings</a
+                        >
+
+                        <div class="dropdown-divider"></div>
+
+                        <a class="dropdown-item dropdown-link" (click)="logout()">Sign Out</a>
+                    </div>
+                </div>
+                <!-- End logged in -->
+
+                <div *ngIf="!isLoggedIn" class="font-size-0-8 disappear-md">
+                    <a routerLink="/login" class="btn btn-magenta btn-sm mr-1">Sign In</a>
+                    <a routerLink="/register" class="btn btn-solid-magenta btn-sm color-white"
+                        >Create Account</a
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<app-loading></app-loading>

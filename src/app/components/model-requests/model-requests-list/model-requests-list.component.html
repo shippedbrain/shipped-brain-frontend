@@ -1,0 +1,109 @@
+<!-- Title -->
+<div class="showcase-info-container text-center color-magenta">
+    <div class="title-container d-flex align-items-center">
+        <span class="title">Model Requests</span>
+
+        <a
+            routerLink="/model-requests"
+            class="btn btn-solid-magenta btn-sm color-white ml-1 align-self-center"
+            >Request model</a
+        >
+    </div>
+</div>
+
+<!-- Filters -->
+<!-- <div class="d-flex my-1">
+    <div class="d-inline-block">
+        <a *ngFor="let filter of modelRequestsFilters" class="pill pill-sm pointer" [ngClass]="[ filter.class, filter.key === activeStatus ? 'active' : '' ]" (click)="filterByStatus(filter.key)">
+            <span>{{ filter.name }}</span>
+        </a>
+    </div>
+</div> -->
+
+<!-- Info -->
+<div *ngIf="modelRequests.length" class="font-size-0-9 color-grey-darkened my-1">
+    <span *ngIf="recentRequests > 0; else noRequestsMadeToday">
+        <b>{{ recentRequests }}</b> model request{{ recentRequests | handlePluralization }}
+        made in the last 48 hours
+    </span>
+    <ng-template #noRequestsMadeToday>
+        <b>{{ modelRequests.length }}</b> model request{{
+            modelRequests.length | handlePluralization
+        }}
+    </ng-template>
+</div>
+
+<div *ngIf="modelRequests.length; else noModelRequests">
+    <div class="list-grid-container">
+        <a
+            *ngFor="let modelRequest of modelRequests"
+            routerLink="/requests/{{ modelRequest.id }}"
+            class="list-item-container"
+        >
+            <div>
+                <!-- User -->
+                <a
+                    routerLink="/profiles/{{ modelRequest.user_requested_by.username }}"
+                    class="d-inline-block"
+                >
+                    <div class="list-item-avatar-container">
+                        <ngx-avatar
+                            name="{{ modelRequest.user_requested_by.name }}"
+                            size="30"
+                        ></ngx-avatar>
+                        <span class="avatar-title">
+                            <b>{{ modelRequest.user_requested_by.name }}</b>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Posted date -->
+                <span class="list-item-pre-info ml-2">
+                    <app-tooltip
+                        [titleContent]="'Posted ' + moment(modelRequest.created_at).fromNow()"
+                        [tooltipContent]="
+                            moment(modelRequest.created_at).format('DD MMM YYYY, HH:mm')
+                        "
+                    ></app-tooltip>
+                </span>
+            </div>
+
+            <div class="list-item-header">
+                <!-- Title -->
+                <div class="d-flex align-items-center">
+                    <h3 class="list-item-header-title mr-1">{{ modelRequest.title }}</h3>
+
+                    <span *ngIf="modelRequest.is_recent" class="mr-1">
+                        <app-info-message
+                            type="warning"
+                            [content]="'<b>NEW</b>'"
+                            size="xs"
+                            [hasIcon]="false"
+                        ></app-info-message>
+                    </span>
+                    <app-info-message
+                        class="font-bold"
+                        [type]="modelRequest.status | modelRequestInfoType"
+                        [content]="modelRequest.status | uppercase"
+                        size="xs"
+                        [hasIcon]="false"
+                    ></app-info-message>
+                </div>
+
+                <!-- Prize -->
+                <app-info-message
+                    type="prize"
+                    [content]="modelRequestPrize"
+                    size="sm"
+                ></app-info-message>
+            </div>
+
+            <!-- Description -->
+            <div class="list-item-body">{{ modelRequest.description | truncate: 200 }}</div>
+        </a>
+    </div>
+</div>
+
+<ng-template #noModelRequests>
+    <app-info-message type="info" [content]="noModelRequestsMessage"></app-info-message>
+</ng-template>

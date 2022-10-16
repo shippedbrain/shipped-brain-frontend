@@ -1,0 +1,26 @@
+<div class="card-showcase fade-in">
+    <a routerLink="/profiles/{{ user.username }}">
+        <div class="showcase-img-container">
+            <ngx-avatar name="{{ user.name }}" [round]="false"></ngx-avatar>
+
+            <div class="showcase-info">
+                <span class="showcase-info-title"
+                    >About {{ user.name | getWordFromString: 0 }}</span
+                >
+                <span
+                    [innerHtml]="user.description | handleEmpty"
+                    class="showcase-info-description"
+                ></span>
+            </div>
+        </div>
+
+        <div class="showcase-title">
+            <span class="showcase-title-text">{{ user.name }}</span>
+
+            <!-- <span class="showcase-secondary-info">
+                <span class="material-icons">favorite</span>
+                <span>21</span>
+            </span> -->
+        </div>
+    </a>
+</div>

@@ -1,0 +1,115 @@
+<div class="full-page">
+    <div class="grid-container">
+        <app-auth-side-content></app-auth-side-content>
+
+        <div class="sign-container">
+            <div class="registration-container">
+                <app-brand></app-brand>
+
+                <ng-container *ngIf="!createdAccount">
+                    <h2 class="fade-in">
+                        <span class="font-size-2 color-dark">Create account</span>
+                    </h2>
+
+                    <div class="fade-in">
+                        <a routerLink="/login" class="link link-magenta">Sign in</a>
+                    </div>
+
+                    <div class="form-container">
+                        <!-- Name -->
+                        <div class="form-group fade-in">
+                            <label for="name" class="form-label">Name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                class="form-control"
+                                [(ngModel)]="user.name"
+                                (keyup.enter)="createUser()"
+                            />
+                        </div>
+
+                        <!-- Username -->
+                        <div class="form-group fade-in">
+                            <label for="username" class="form-label">Username</label>
+                            <input
+                                type="text"
+                                id="username"
+                                class="form-control"
+                                [(ngModel)]="user.username"
+                                (keyup.enter)="createUser()"
+                            />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group fade-in">
+                            <label for="email" class="form-label">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-control"
+                                [(ngModel)]="user.email"
+                                (keyup.enter)="createUser()"
+                            />
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group fade-in">
+                            <label for="passwordInput" class="form-label">Password</label>
+                            <input
+                                type="password"
+                                id="passwordInput"
+                                class="form-control"
+                                [(ngModel)]="user.password"
+                                (keyup.enter)="createUser()"
+                            />
+                            <!-- Toggle password input -->
+                            <i
+                                class="material-icons color-dark"
+                                id="passwordToggle"
+                                title="Show password"
+                                aria-label="Show password"
+                                (click)="showPassword()"
+                                >visibility</i
+                            >
+                        </div>
+
+                        <!-- Error message -->
+                        <app-info-message
+                            *ngIf="errorMsg"
+                            type="error"
+                            [content]="errorMsg"
+                        ></app-info-message>
+
+                        <button
+                            class="btn btn-solid-magenta color-white"
+                            [ngClass]="{ 'btn-loading': loading.registration }"
+                            [disabled]="loading.registration"
+                            (click)="createUser()"
+                        >
+                            <span *ngIf="!loading.registration">Create</span>
+                            <app-loading-icon *ngIf="loading.registration"></app-loading-icon>
+                        </button>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="createdAccount">
+                    <div>
+                        <h4>
+                            <span class="font-size-2 color-dark">Account created!</span>
+                        </h4>
+
+                        <div>
+                            <span
+                                >Welcome to Shipped Brain,
+                                {{ user.name | getWordFromString: 0 }}!</span
+                            >
+                            <div>
+                                <a routerLink="/login" class="color-magenta">Sign in</a>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

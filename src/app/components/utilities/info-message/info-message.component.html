@@ -1,0 +1,8 @@
+<!-- <div class="color-magenta-dark font-size-0-8 my-1">
+    <span>ERROR</span>
+</div> -->
+
+<div class="alert" [ngClass]="alertClass">
+    <span *ngIf="hasIcon" class="material-icons">{{ icon }}</span>
+    <div [innerHtml]="content"></div>
+</div>

@@ -1,0 +1,107 @@
+<!-- Title -->
+<div class="showcase-info-container text-center color-magenta">
+    <div class="title-container d-flex justify-content-space-between align-items-center w-100">
+        <span class="title">Request model</span>
+    </div>
+</div>
+
+<div class="form-container">
+    <!-- Title -->
+    <div class="row gap-1">
+        <div class="col-6 col-sm-12">
+            <div class="form-group">
+                <label for="title" class="form-label">Title</label>
+                <input
+                    type="text"
+                    id="title"
+                    class="form-control"
+                    [(ngModel)]="modelRequest.title"
+                />
+            </div>
+        </div>
+    </div>
+
+    <div class="row gap-1">
+        <!-- Description -->
+        <div class="col-12 col-sm-12">
+            <div class="form-group">
+                <label for="description" class="form-label">
+                    Description
+                    <small class="d-block color-grey"
+                        >Please describe in as much detail as possible what the model's goal
+                        is</small
+                    >
+                </label>
+                <textarea
+                    id="description"
+                    rows="8"
+                    class="form-control"
+                    [(ngModel)]="modelRequest.description"
+                ></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gap-1">
+        <!-- Input data -->
+        <div class="col-6 col-sm-12">
+            <div class="form-group">
+                <label for="inputData" class="form-label">
+                    Input Data
+                    <small class="d-block color-grey"
+                        >Enter data the model should be able to receive</small
+                    >
+                </label>
+                <textarea
+                    id="inputData"
+                    rows="8"
+                    class="form-control"
+                    [(ngModel)]="modelRequest.input_data"
+                ></textarea>
+            </div>
+        </div>
+
+        <!-- Output data -->
+        <div class="col-6 col-sm-12">
+            <div class="form-group">
+                <label for="outputData" class="form-label">
+                    Output Data
+                    <small class="d-block color-grey"
+                        >Enter data the model should return</small
+                    >
+                </label>
+                <textarea
+                    id="outputData"
+                    rows="8"
+                    class="form-control"
+                    [(ngModel)]="modelRequest.output_data"
+                ></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error message -->
+    <app-info-message
+        *ngIf="errors.createModelRequest"
+        type="error"
+        [content]="errors.createModelRequest"
+    ></app-info-message>
+
+    <!-- Success message -->
+    <app-info-message
+        *ngIf="messages.createModelRequest"
+        type="success"
+        [content]="messages.createModelRequest"
+    ></app-info-message>
+
+    <!-- Submit button -->
+    <button
+        class="btn btn-solid-magenta color-white"
+        [ngClass]="{ 'btn-loading': loading.createModelRequest }"
+        [disabled]="loading.createModelRequest"
+        (click)="saveModelRequest()"
+    >
+        <span *ngIf="!loading.createModelRequest">Request</span>
+        <app-loading-icon *ngIf="loading.createModelRequest"></app-loading-icon>
+    </button>
+</div>

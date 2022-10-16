@@ -1,0 +1,15 @@
+<h2 class="mb-1">Profiles</h2>
+
+<div *ngIf="loading.users" class="font-size-0-8 font-bold rainbow-color">
+    <p>Hang tight while we load the awesome Shipped Brain community!</p>
+</div>
+
+<app-info-message
+    *ngIf="!loading.users && !users?.length"
+    type="info"
+    [content]="noUsersMessage"
+></app-info-message>
+
+<div *ngIf="users">
+    <app-user-list [users]="users"></app-user-list>
+</div>

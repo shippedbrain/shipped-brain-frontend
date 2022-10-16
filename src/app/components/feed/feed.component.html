@@ -1,0 +1,147 @@
+<div class="bg-banner-container">
+    <div class="bg-banner-content">
+        <span class="bg-banner-title"
+            >Try & share Machine Learning models with zero dependencies.</span
+        >
+
+        <span class="bg-banner-subtitle"
+            >Shipped Brain is a platform that makes it easy to create & showcase sharable
+            machine learning models and connect with creative data scientists from across the
+            globe.</span
+        >
+
+        <a [routerLink]="ctaButton.url" class="btn btn-solid-magenta color-white">{{
+            ctaButton.text
+        }}</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="form-control-container search">
+                <span class="material-icons">search</span>
+
+                <div class="form-group w-100">
+                    <input
+                        type="text"
+                        class="form-control height-lg"
+                        placeholder="Search"
+                        #searchInput
+                        (keyup.enter)="searchCategory()"
+                    />
+
+                    <!--* Search suggestions -->
+                    <!-- <div class="search-input-suggestions">
+                        <span class="suggestions-title">Search for</span>
+
+                        <div *ngIf="categories" class="search-suggestions-container">
+                            <a *ngFor="let category of categories" routerLink="/search" [queryParams]="{ for: category.value | getFriendlyUrl }" class="suggestion-item">{{ category.value }}</a>
+                        </div>
+                    </div> -->
+
+                    <div
+                        *ngIf="searchInput.value"
+                        class="cancel-container"
+                        (click)="clearSearch()"
+                    >
+                        <span class="material-icons cancel-btn">cancel</span>
+                    </div>
+
+                    <div class="search-append-btns">
+                        <div class="d-inline-block">
+                            <a
+                                *ngFor="let globalCategory of globalCategories"
+                                class="pill pill-sm pointer"
+                                [ngClass]="{ active: activeGlobalCategory === globalCategory }"
+                                (click)="chooseGlobalCategory(globalCategory, true)"
+                            >
+                                <span>{{ globalCategory.value }}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <!-- <div class="row mb-2">
+        <div class="col-12">
+            <div class="d-flex justify-content-space-between"> -->
+    <!-- Categories -->
+    <!-- <div *ngIf="categories">
+                    <span class="font-size-0-7 font-bold color-grey-darkened">Filter</span>
+
+                    <div class="dropdown-container dropdown-filter">
+                        <span class="dropdown-toggle dropdown-with-border">
+                            <span class="dropdown-text text-center mr-1">
+                                <span>Categories</span>
+                                <span class="material-icons">arrow_drop_down</span>
+                            </span>
+                        </span>
+
+                        <div class="dropdown-menu dropdown-menu-left">
+                            <span *ngFor="let category of categories" class="dropdown-item dropdown-link" hashtag [hashtagKey]="category.key" [hashtagValue]="category.value" (click)="filterByCategory(category)">{{ category.value }}</span>
+                        </div>
+                    </div>
+                </div> -->
+
+    <!-- Sort -->
+    <!-- <div *ngIf="orderFilters">
+                    <div class="sort-container">
+                        <span class="font-size-0-7 font-bold color-grey-darkened">Sort</span>
+
+                        <div class="dropdown-container">
+                            <span class="dropdown-toggle dropdown-with-border">
+                                <span class="dropdown-text text-center mr-1">
+                                    <span>{{ activeOrder.value }}</span>
+                                    <span class="material-icons">arrow_drop_down</span>
+                                </span>
+                            </span>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <span *ngFor="let order of orderFilters" class="dropdown-item dropdown-link" (click)="orderModels(order)">{{ order.value }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div
+        class="mt-2 mb-5"
+        infiniteScroll
+        [infiniteScrollDistance]="1"
+        [infiniteScrollThrottle]="300"
+        (scrolled)="onScroll()"
+    >
+        <!-- Models -->
+        <div *ngIf="models.length">
+            <app-model-card-grid [models]="models"></app-model-card-grid>
+        </div>
+
+        <!-- Profiles -->
+        <div *ngIf="profiles.length">
+            <app-user-list [users]="profiles"></app-user-list>
+        </div>
+
+        <app-empty-state
+            *ngIf="!models.length && !profiles.length && !loading.feed"
+            mainTitle="No results found"
+            subTitle="Choose a different category and check out some awesome models or profiles from the Shipped Brain community."
+        >
+        </app-empty-state>
+
+        <div *ngIf="loading.feed" class="d-flex justify-content-center rainbow-color mt-2">
+            <app-loading-icon additionalClasses="font-size-3"></app-loading-icon>
+        </div>
+
+        <div *ngIf="showLoadMore && !loading.feed" class="my-3 text-center">
+            <button class="btn btn-solid-magenta btn-sm color-white" (click)="loadMore()">
+                Load More
+            </button>
+        </div>
+    </div>
+</div>

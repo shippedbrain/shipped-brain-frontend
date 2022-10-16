@@ -1,0 +1,64 @@
+<app-sidebar-nav></app-sidebar-nav>
+
+<main class="sidebar-side-content-container">
+    <div *ngIf="user" class="sidebar-side-content">
+        <h2 class="mb-2">
+            {{ user.name | getWordFromString | getPossessiveEnding }} Dashboard
+        </h2>
+
+        <div class="showcase">
+            <!-- Auth token -->
+            <div *ngIf="user && authToken" class="showcase-section my-2">
+                <span class="showcase-section-title mb-1">Auth token</span>
+                <div class="code-container">
+                    <pre id="authToken" class="p-0-imp font-size-0-9 code">{{
+                        authToken
+                    }}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Calls -->
+        <div *ngIf="apiCalls" class="mb-1">
+            <app-stat-info [name]="'API Call'" [value]="apiCalls.length"></app-stat-info>
+        </div>
+
+        <!-- Chart -->
+        <div *ngIf="apiCalls" class="dashboard-charts-container mb-3">
+            <app-chart
+                chartID="apiCallsChart"
+                title="Used models"
+                [labels]="apiCallsChartLabels"
+                [values]="apiCallsChartValues"
+            ></app-chart>
+
+            <app-chart
+                chartID="apiCallsRemainingChart"
+                title="API calls remaining"
+                [labels]="apiCallsRemainingChartLabels"
+                [values]="apiCallsRemainingChartValues"
+            ></app-chart>
+        </div>
+
+        <div class="row">
+            <div *ngIf="modelUsage" class="col-12 mb-2">
+                <app-datatables
+                    tableID="tableAPICalls"
+                    title="Model Usage History"
+                    [columnHeadings]="modelUsageColumnHeadings"
+                    [data]="modelUsageData"
+                    [columns]="modelUsageColumnsCustom"
+                ></app-datatables>
+            </div>
+            <div *ngIf="modelUploads" class="col-12">
+                <app-datatables
+                    tableID="tableModelUplaods"
+                    title="Model Uploads"
+                    [columnHeadings]="modelUploadsColumnHeadings"
+                    [data]="modelUploadsData"
+                    [columns]="modelUploadsColumnsCustom"
+                ></app-datatables>
+            </div>
+        </div>
+    </div>
+</main>

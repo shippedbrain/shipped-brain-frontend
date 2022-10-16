@@ -1,0 +1,12 @@
+<div class="fixed-badge" (click)="openModal()">
+    <div class="fixed-badge-title-container">
+        <span *ngIf="icon" class="material-icons">{{ icon }}</span>
+        <span class="fixed-badge-title">{{ title }}</span>
+    </div>
+</div>
+
+<app-markdown-info-modal
+    [markdownSectionID]="markdownSectionID"
+    [modalTitle]="modalTitle"
+    [markdownClass]="markdownClass"
+></app-markdown-info-modal>

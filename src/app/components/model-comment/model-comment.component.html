@@ -1,0 +1,59 @@
+<div *ngIf="modelComment" class="fade-in">
+    <div class="comment-container">
+        <!-- User -->
+        <div class="comment-header">
+            <a
+                routerLink="/profiles/{{ modelComment.username }}"
+                target="_blank"
+                class="comment-header-link"
+            >
+                <img
+                    *ngIf="modelComment.user_photo; else showDefaultImage"
+                    [src]="modelComment.user_photo | safeHtml"
+                    [alt]="modelComment.name"
+                />
+                <ng-template #showDefaultImage>
+                    <ngx-avatar name="{{ modelComment.name }}" size="34"></ngx-avatar>
+                </ng-template>
+
+                <h3 class="comment-title">
+                    <b>{{ modelComment.name }}</b>
+                </h3>
+            </a>
+
+            <span class="comment-date">
+                <span class="comment-separator">&bull;</span>Comment on
+                {{
+                    moment(modelComment.created_at).format(
+                        "DD
+                MMM
+                YYYY HH:mm"
+                    )
+                }}
+            </span>
+
+            <span class="comment-header-right">
+                <span *ngIf="isModelOwner" class="comment-model-owner">
+                    <app-info-message
+                        type="info"
+                        content="Model Owner"
+                        [hasIcon]="false"
+                        size="xs"
+                    ></app-info-message>
+                </span>
+
+                <app-delete-model-comment-modal
+                    *ngIf="canDeleteComment"
+                    [modelComment]="modelComment"
+                    (modelCommentDeleted)="onModelCommentDeleted($event)"
+                >
+                </app-delete-model-comment-modal>
+            </span>
+        </div>
+
+        <!-- Comment -->
+        <div class="comment-body">
+            <div [innerHtml]="modelComment.comment"></div>
+        </div>
+    </div>
+</div>

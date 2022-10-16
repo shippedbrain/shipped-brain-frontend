@@ -1,0 +1,65 @@
+<!-- Search box -->
+<div class="search-container">
+    <div class="search-title">Enter your search below</div>
+
+    <div class="search-input-container">
+        <span class="material-icons search-icon">search</span>
+
+        <input
+            type="text"
+            id="search-box"
+            autofocus
+            class="form-control showcase-form"
+            placeholder="Search for models or users"
+            #searchInput
+        />
+
+        <div *ngIf="searchInput.value" class="cancel-container" (click)="clearSearch()">
+            <span class="material-icons cancel-btn">cancel</span>
+        </div>
+    </div>
+</div>
+
+<!-- Hashtag results -->
+<div *ngIf="hashtags.length">
+    <!-- Hashtag Title -->
+    <div *ngFor="let hashtag of hashtags" class="mt-2">
+        <div class="showcase-info-container text-center color-magenta mb-1">
+            <div class="title-container">
+                <span class="title" [ngClass]="{ 'color-green': hashtag.key === 'hashtag' }">
+                    <span *ngIf="hashtag.key === 'hashtag'">#</span>
+                    {{ hashtag.value }}
+                </span>
+            </div>
+        </div>
+
+        <app-model-card-grid [models]="hashtag.models"></app-model-card-grid>
+    </div>
+</div>
+
+<div *ngIf="models.length" class="mt-2">
+    <!-- Models Title -->
+    <div class="showcase-info-container text-center color-magenta mb-1">
+        <div class="title-container">
+            <span class="title">Models</span>
+        </div>
+    </div>
+
+    <app-model-card-grid [models]="models"></app-model-card-grid>
+</div>
+
+<!-- User results -->
+<div *ngIf="users.length" class="mt-2">
+    <!-- Users Title -->
+    <div class="showcase-info-container text-center mb-1">
+        <div class="title-container">
+            <span class="title">Users</span>
+        </div>
+    </div>
+
+    <app-user-card-grid [users]="users"></app-user-card-grid>
+</div>
+
+<div *ngIf="hasSearched && !users.length && !models.length && !hashtags.length" class="mt-2">
+    <span class="font-bold">No results found</span>
+</div>

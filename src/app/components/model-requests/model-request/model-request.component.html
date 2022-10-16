@@ -1,0 +1,125 @@
+<ng-container *ngIf="modelRequest">
+    <div class="showcase">
+        <div class="showcase-title-container">
+            <!-- Back to list -->
+            <a
+                routerLink="/requests"
+                class="btn btn-solid-magenta btn-sm color-white align-self-center mb-1"
+            >
+                <span>Back to model requests</span>
+            </a>
+
+            <!-- Name -->
+            <div class="showcase-title mt-0-imp">
+                <div
+                    class="
+                        d-flex
+                        justify-content-space-between
+                        align-items-center
+                        flex-sm-column
+                    "
+                >
+                    <div
+                        class="
+                            d-flex
+                            justify-content-flex-start
+                            align-items-baseline
+                            flex-sm-column
+                        "
+                    >
+                        <span class="mr-1">{{ modelRequest.title }}</span>
+                        <span *ngIf="modelRequest.is_recent" class="mr-1">
+                            <app-info-message
+                                type="warning"
+                                [content]="'<b>NEW</b>'"
+                                size="xs"
+                                [hasIcon]="false"
+                            ></app-info-message>
+                        </span>
+                        <app-info-message
+                            *ngIf="modelRequest.status"
+                            [type]="modelRequest.status | modelRequestInfoType"
+                            [content]="modelRequest.status | uppercase"
+                            size="xs"
+                            [hasIcon]="false"
+                        ></app-info-message>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <!-- Posted at -->
+                        <span class="font-normal font-size-0-8 color-grey-darkened ml-1">
+                            <app-tooltip
+                                [titleContent]="
+                                    'Posted ' + moment(modelRequest.created_at).fromNow()
+                                "
+                                [tooltipContent]="
+                                    moment(modelRequest.created_at).format(
+                                        'DD MMM YYYY, HH:mm'
+                                    )
+                                "
+                            ></app-tooltip>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prize -->
+            <div>
+                <div class="d-inline-block">
+                    <app-info-message
+                        type="prize"
+                        [content]="modelRequestPrize"
+                        size="sm"
+                    ></app-info-message>
+                </div>
+            </div>
+
+            <!-- User -->
+            <a
+                *ngIf="modelRequest.user_requested_by"
+                routerLink="/profiles/{{ modelRequest.user_requested_by.username }}"
+                class="d-inline-block"
+            >
+                <div class="showcase-link">
+                    <ngx-avatar name="{{ modelRequest.user_requested_by.name }}"></ngx-avatar>
+                    <span class="showcase-link-text">{{
+                        modelRequest.user_requested_by.name
+                    }}</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Description -->
+        <div class="my-2">
+            <span
+                class="font-size-0-9 color-grey-darkened"
+                [innerHtml]="modelRequest.description | handleEmpty"
+            ></span>
+        </div>
+
+        <!-- Input/Output -->
+        <div class="showcase-section my-2">
+            <div class="row">
+                <!-- Input -->
+                <div class="col-6 col-sm-12 mt-1">
+                    <span class="showcase-section-title mb-1">Input Data</span>
+                    <div class="code-container">
+                        <pre class="p-0-imp font-size-0-9 code">{{
+                            modelRequest.input_data
+                        }}</pre>
+                    </div>
+                </div>
+
+                <!-- Output -->
+                <div class="col-6 col-sm-12 mt-1">
+                    <span class="showcase-section-title mb-1">Output Data</span>
+                    <div class="code-container">
+                        <pre class="p-0-imp font-size-0-9 code">{{
+                            modelRequest.output_data
+                        }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

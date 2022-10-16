@@ -1,0 +1,18 @@
+<a routerLink="/paper/{{ paper.paper_id }}">
+    <div class="paper-container">
+        <div class="d-flex justify-content-space-between">
+            <small class="paper-pre-info"
+                >Published {{ moment(paper.published_at).format("D MMM YYYY") }}</small
+            >
+
+            <span framework [frameworkTitle]="paper.framework">{{ paper.framework }}</span>
+        </div>
+
+        <p class="paper-title">{{ paper.title }}</p>
+        <div
+            class="paper-title-info"
+            [innerHTML]="paper.authors | combineListElements: 2"
+        ></div>
+        <small class="paper-info">{{ paper.abstract | truncate: 200 }}</small>
+    </div>
+</a>

@@ -1,0 +1,142 @@
+<div *ngIf="user" class="user-grid-container">
+    <div class="user-container">
+        <div class="sidebar">
+            <!-- User info -->
+            <div class="sidebar-header">
+                <img
+                    *ngIf="user.photo; else showDefaultImage"
+                    [src]="user.photo | safeHtml"
+                    [alt]="user.name"
+                    class="sidebar-img"
+                />
+                <ng-template #showDefaultImage>
+                    <ngx-avatar name="{{ user.name }}"></ngx-avatar>
+                </ng-template>
+
+                <div>
+                    <span class="sidebar-title">{{ user.name }}</span>
+                    <div class="sidebar-title-info">
+                        Joined: <b>{{ moment(user.created_at).format("DD MMM YYYY") }}</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Skills -->
+            <div class="sidebar-content">
+                <span class="sidebar-content-title">Skills</span>
+
+                <ng-container
+                    *ngIf="userCategories && userCategories.length; else noCategories"
+                >
+                    <ng-container *ngFor="let category of userCategories">
+                        <a
+                            *ngIf="category.key === 'category'"
+                            routerLink="/search"
+                            [queryParams]="{ for: category.value | getFriendlyUrl }"
+                            class="pill pill-sm"
+                            >{{ category.value }}</a
+                        >
+                    </ng-container>
+                </ng-container>
+
+                <ng-template #noCategories>
+                    <span class="font-size-0-8 color-grey"
+                        >{{ user.name | getWordFromString }} has no skills yet 😕</span
+                    >
+                </ng-template>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Hashtags -->
+            <div class="sidebar-content">
+                <span class="sidebar-content-title">Hashtags</span>
+
+                <ng-container *ngIf="userHashtags.length; else noHashtags">
+                    <a
+                        *ngFor="let hashtag of userHashtags"
+                        routerLink="/search"
+                        [queryParams]="{ for: hashtag.value | getFriendlyUrl }"
+                        class="pill pill-{{ hashtag.key }} pill-sm"
+                        >#{{ hashtag.value }}</a
+                    >
+                </ng-container>
+
+                <ng-template #noHashtags>
+                    <span class="font-size-0-8 color-grey"
+                        >{{ user.name | getWordFromString }} hasn't added any hashtags yet
+                        😕</span
+                    >
+                </ng-template>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- About -->
+            <div class="sidebar-content">
+                <span class="sidebar-content-title">About</span>
+
+                <div
+                    class="sidebar-content-info"
+                    [innerHtml]="user.description | handleEmpty"
+                ></div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Share -->
+            <div class="sidebar-content">
+                <span class="sidebar-content-title">Share</span>
+
+                <div>
+                    <app-share-group
+                        [targetName]="user.name | getWordFromString"
+                        [showTitle]="false"
+                    ></app-share-group>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Models -->
+    <div class="showcase-container">
+        <h2>Models</h2>
+
+        <ng-container *ngIf="userCategories && userCategories.length">
+            <a
+                class="pill pill-magenta-dark pill-sm pointer"
+                (click)="filterModelsByCategory()"
+                >All</a
+            >
+            <a
+                *ngFor="let category of userCategories"
+                class="pill pill-{{ category.key }} pill-sm pointer"
+                [ngClass]="{
+                    active:
+                        chosenCategory.key === category.key &&
+                        chosenCategory.value === category.value
+                }"
+                (click)="filterModelsByCategory(category)"
+            >
+                <span *ngIf="category.key === 'hashtag'">#</span>
+                {{ category.value }}
+            </a>
+        </ng-container>
+
+        <ng-container *ngIf="filteredModels?.length; else noUserModels">
+            <app-model-card-grid
+                [models]="filteredModels"
+                [isOwner]="isLoggedInUser"
+            ></app-model-card-grid>
+        </ng-container>
+
+        <ng-template #noUserModels>
+            <span class="color-grey"
+                >Looks like {{ user.name | getWordFromString }} doesn't have any models
+                yet.</span
+            >
+        </ng-template>
+    </div>
+</div>

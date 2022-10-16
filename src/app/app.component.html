@@ -1,0 +1,11 @@
+<div class="full-height">
+    <app-header [isFeed]="isFeed"></app-header>
+
+    <div [ngClass]="{ 'container pt-3': !isFullpage && !isDashboard && !isFeed }">
+        <router-outlet></router-outlet>
+    </div>
+
+    <app-loading></app-loading>
+</div>
+
+<app-footer *ngIf="!isFullpage"></app-footer>

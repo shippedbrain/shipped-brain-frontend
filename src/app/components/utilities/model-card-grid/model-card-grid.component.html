@@ -1,0 +1,5 @@
+<div *ngIf="models" class="cards-container">
+    <ng-container *ngFor="let model of models">
+        <app-model-card [model]="model" [isOwner]="isOwner"></app-model-card>
+    </ng-container>
+</div>

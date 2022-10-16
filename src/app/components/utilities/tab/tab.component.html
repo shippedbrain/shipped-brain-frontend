@@ -1,0 +1,7 @@
+<div
+    class="tab-content"
+    [ngClass]="{ 'tab-content-spaced': spaced, 'no-padding': noPadding }"
+    [hidden]="!active"
+>
+    <ng-content></ng-content>
+</div>

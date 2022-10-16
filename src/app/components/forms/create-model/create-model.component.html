@@ -1,0 +1,151 @@
+<div>
+    <!-- Edit Title -->
+    <div class="showcase-info-container text-center color-magenta">
+        <div
+            class="
+                title-container
+                d-flex
+                justify-content-space-between
+                align-items-center
+                w-100
+            "
+        >
+            <span class="title"> Create Model </span>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Model Name -->
+        <div class="form-group">
+            <label for="model_name" class="form-label form-label-with-icon">Model Name</label>
+            <input id="model_name" class="form-control" [(ngModel)]="model.name" />
+        </div>
+
+        <!-- GitHub Repository -->
+        <div class="form-group">
+            <label for="github_repo" class="form-label form-label-with-icon">
+                GitHub Repository
+                <small class="form-label-icon">
+                    <app-tooltip
+                        icon="info"
+                        tooltipContent="When a README.md file is present in the master branch of the
+                    repository, it will be used as a model card"
+                        [tooltipWide]="true"
+                    ></app-tooltip>
+                </small>
+            </label>
+            <input
+                id="github_repo"
+                class="form-control"
+                placeholder="github.com/github_username/github_project"
+                [(ngModel)]="model.github_repo"
+            />
+        </div>
+
+        <!-- Description -->
+        <div class="row gap-1">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="description" class="form-label form-label-with-icon">
+                        Description
+                        <small class="form-label-icon">
+                            <app-tooltip
+                                icon="info"
+                                tooltipContent="Description will be used as a short preview of the model when shown on Shipped Brain's feed, for example"
+                                [tooltipWide]="true"
+                            ></app-tooltip>
+                        </small>
+                    </label>
+                    <textarea
+                        id="description"
+                        rows="2"
+                        class="form-control"
+                        [(ngModel)]="model.description"
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gap-1">
+            <!-- Metrics -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="metrics" class="form-label">Metrics</label>
+                    <textarea
+                        id="metrics"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="model.metrics"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Parameters -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="parameters" class="form-label">Parameters</label>
+                    <textarea
+                        id="parameters"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="model.parameters"
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gap-1">
+            <!-- Input Example -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="inputExample" class="form-label">Input Example</label>
+                    <textarea
+                        id="inputExample"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="model.input_example"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Signature -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="signature" class="form-label">Signature</label>
+                    <textarea
+                        id="signature"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="model.signature"
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error message model -->
+        <app-info-message
+            *ngIf="errorMsgs.createModel"
+            type="error"
+            [content]="errorMsgs.createModel"
+        >
+        </app-info-message>
+
+        <!-- Success message model -->
+        <app-info-message
+            *ngIf="successMsgs.createModel"
+            type="success"
+            [content]="successMsgs.createModel"
+        >
+        </app-info-message>
+
+        <button
+            class="btn btn-solid-magenta color-white"
+            [ngClass]="{ 'btn-loading': loading.createModel }"
+            [disabled]="loading.createModel"
+            (click)="createModel()"
+        >
+            <span *ngIf="!loading.createModel">Create</span>
+            <app-loading-icon *ngIf="loading.createModel"></app-loading-icon>
+        </button>
+    </div>
+</div>

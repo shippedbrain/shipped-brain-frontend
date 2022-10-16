@@ -1,0 +1,8 @@
+<div class="d-inline-block mr-2">
+    <div class="border-left border-l-magenta font-size-1-2 font-bold">
+        <span class="ml-1"
+            >{{ value }} {{ name
+            }}<span *ngIf="pluralize">{{ value | handlePluralization }}</span>
+        </span>
+    </div>
+</div>

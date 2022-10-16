@@ -1,0 +1,69 @@
+<div class="text-center">
+    <p class="font-size-1-2 font-bold">
+        Oh oh, looks like you can't access the
+        <span class="color-magenta">{{ requestedFeatureFriendlyName }}</span> feature!
+    </p>
+
+    <!-- TODO: Add reasons here -->
+    <div *ngIf="currentUser && currentUser.user_limits">
+        <div *ngIf="requestedFeature === 'deploy'">
+            <!-- If max models === 0 -->
+            <p *ngIf="currentUser.user_limits.max_models === 0">
+                You haven't yet been granted permission to upload any models.
+            </p>
+            <!-- If user has reacher upload limit -->
+            <p *ngIf="currentUser.models_count >= currentUser.user_limits.max_models">
+                You've reached the limit of your allowed number of uploaded models
+                <span class="font-bold"
+                    >({{ currentUser.models_count }}/{{
+                        currentUser.user_limits.max_models
+                    }})</span
+                >.
+            </p>
+        </div>
+    </div>
+
+    <p class="mt-2 mb-2">
+        Please use the form below to get in touch with us so we can give you access to it!
+    </p>
+
+    <div class="form-container text-left">
+        <!-- User reason info -->
+        <div class="form-group fade-in">
+            <label for="reasonInfo" class="form-label"
+                >Let us know in just a few words why you'd like access to this feature (not
+                required)</label
+            >
+            <textarea
+                id="reasonInfo"
+                rows="8"
+                class="form-control"
+                [(ngModel)]="featureAccess.request_reason"
+            ></textarea>
+        </div>
+
+        <!-- Error message model -->
+        <app-info-message
+            *ngIf="errors.submitRequest"
+            type="error"
+            [content]="errors.submitRequest"
+        ></app-info-message>
+
+        <!-- Success message model -->
+        <app-info-message
+            *ngIf="messages.submitRequest"
+            type="success"
+            [content]="messages.submitRequest"
+        ></app-info-message>
+
+        <button
+            class="btn btn-solid-magenta color-white"
+            [ngClass]="{ 'btn-loading': loading.submitRequest }"
+            [disabled]="loading.submitRequest"
+            (click)="submitRequest()"
+        >
+            <span *ngIf="!loading.submitRequest">Request access</span>
+            <app-loading-icon *ngIf="loading.submitRequest"></app-loading-icon>
+        </button>
+    </div>
+</div>

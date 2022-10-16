@@ -1,0 +1,285 @@
+<div>
+    <!-- Edit Title -->
+    <div *ngIf="model" class="showcase-info-container text-center color-magenta">
+        <div
+            class="
+                title-container
+                d-flex
+                justify-content-space-between
+                align-items-center
+                w-100
+            "
+        >
+            <span class="title">
+                Edit Model
+                <span class="color-dark">{{ model.name }}</span>
+            </span>
+            <a
+                routerLink="/models/{{ model.name }}"
+                class="btn btn-solid-magenta color-white btn-sm"
+                >Go to model page</a
+            >
+        </div>
+    </div>
+
+    <div *ngIf="!model" class="form-container">
+        <!-- Error message model not found -->
+        <app-info-message
+            *ngIf="errorMsgs.model"
+            type="error"
+            [content]="errorMsgs.model"
+        ></app-info-message>
+    </div>
+
+    <div *ngIf="model" class="form-container">
+        <!-- Image -->
+        <div class="form-group">
+            <img
+                *ngIf="modelCoverPhoto; else showDefaultImage"
+                [src]="modelCoverPhoto | safeHtml"
+                class="img"
+            />
+            <ng-template #showDefaultImage>
+                <img src="assets/img/model_default.jpg" [alt]="model.name" class="img" />
+            </ng-template>
+
+            <!-- Error message image upload -->
+            <app-info-message
+                *ngIf="errorMsgs.uploadImage"
+                type="error"
+                [content]="errorMsgs.uploadImage"
+            >
+            </app-info-message>
+
+            <!-- Success message image upload -->
+            <app-info-message
+                *ngIf="successMsgs.uploadImage"
+                type="success"
+                [content]="successMsgs.uploadImage"
+            >
+            </app-info-message>
+
+            <input
+                type="file"
+                id="file"
+                class="form-input"
+                accept="image/png, image/jpeg, image/gif"
+                (change)="uploadImage($event)"
+            />
+            <label for="file">
+                <span class="material-icons">insert_photo</span>
+                <span>Upload an image</span>
+            </label>
+        </div>
+
+        <!-- GitHub Repository -->
+        <div class="form-group">
+            <label for="github_repo" class="form-label form-label-with-icon">
+                GitHub Repository
+                <small class="form-label-icon">
+                    <app-tooltip
+                        icon="info"
+                        tooltipContent="When a README.md file is present in the master branch of the
+                    repository, it will be used as a model card"
+                        [tooltipWide]="true"
+                    ></app-tooltip>
+                </small>
+            </label>
+            <input
+                id="github_repo"
+                class="form-control"
+                placeholder="github.com/github_username/github_project"
+                [(ngModel)]="model.github_repo"
+            />
+        </div>
+
+        <!-- Description -->
+        <div class="row gap-1">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="description" class="form-label form-label-with-icon">
+                        Description
+                        <small class="form-label-icon">
+                            <app-tooltip
+                                icon="info"
+                                tooltipContent="Description will be used as a short preview of the model when shown on Shipped Brain's feed, for example"
+                                [tooltipWide]="true"
+                            ></app-tooltip>
+                        </small>
+                    </label>
+                    <textarea
+                        id="description"
+                        rows="2"
+                        class="form-control"
+                        [(ngModel)]="model.description"
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gap-1">
+            <!-- Metrics -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="metrics" class="form-label">Metrics</label>
+                    <textarea
+                        id="metrics"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="modelMetrics"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Parameters -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="parameters" class="form-label">Parameters</label>
+                    <textarea
+                        id="parameters"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="modelParameters"
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gap-1">
+            <!-- Input Example -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="inputExample" class="form-label">Input Example</label>
+                    <textarea
+                        id="inputExample"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="modelInputExample"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Signature -->
+            <div class="col-6 col-sm-12">
+                <div class="form-group">
+                    <label for="signature" class="form-label">Signature</label>
+                    <textarea
+                        id="signature"
+                        rows="4"
+                        class="form-control"
+                        [(ngModel)]="modelSignature"
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error message model -->
+        <app-info-message
+            *ngIf="errorMsgs.model"
+            type="error"
+            [content]="errorMsgs.model"
+        ></app-info-message>
+
+        <!-- Success message model -->
+        <app-info-message
+            *ngIf="successMsgs.model"
+            type="success"
+            [content]="successMsgs.model"
+        ></app-info-message>
+
+        <button
+            class="btn btn-solid-magenta color-white"
+            [ngClass]="{ 'btn-loading': loading.updateModel }"
+            [disabled]="loading.updateModel"
+            (click)="updateModel()"
+        >
+            <span *ngIf="!loading.updateModel">Update</span>
+            <app-loading-icon *ngIf="loading.updateModel"></app-loading-icon>
+        </button>
+
+        <hr />
+
+        <!-- Categories -->
+        <div *ngIf="modelCategories" class="form-group">
+            <label class="form-label d-block"
+                >Pick model categories
+                <span class="font-normal color-grey-darkened">(up to 2)</span></label
+            >
+
+            <!-- Category list -->
+            <div class="pill-container mt-1">
+                <a
+                    *ngFor="let hashtag; let i = index; of: modelCategories"
+                    class="pill fade-in pointer"
+                    [ngClass]="[hashtag.active ? 'active' : 'inactive']"
+                    (click)="updateModelCategory(hashtag)"
+                    >{{ hashtag.value }}</a
+                >
+            </div>
+        </div>
+
+        <!-- Error message hashtag -->
+        <app-info-message
+            *ngIf="errorMsgs.hashtag"
+            type="error"
+            [content]="errorMsgs.hashtag"
+        ></app-info-message>
+
+        <!-- Success message hashtag -->
+        <app-info-message
+            *ngIf="successMsgs.hashtag"
+            type="success"
+            [content]="successMsgs.hashtag"
+        ></app-info-message>
+
+        <!-- Hashtags -->
+        <div class="form-group">
+            <label class="form-label d-block"
+                >Add model hashtags
+                <span class="font-normal color-grey-darkened">(up to 3)</span></label
+            >
+
+            <!-- Add hashtag -->
+            <div class="form-input-combo">
+                <span class="input-pre-item">
+                    <span>#</span>
+                </span>
+                <input type="text" class="form-control" [(ngModel)]="newHashtag" />
+                <button
+                    type="button"
+                    class="form-input-btn"
+                    [disabled]="!newHashtag"
+                    [ngClass]="{ 'btn-loading': loading.addHashtag }"
+                    (click)="addHashtag()"
+                >
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+
+            <!-- Hashtag list -->
+            <div class="pill-container mt-1">
+                <span
+                    *ngFor="let hashtag; let i = index; of: modelHashtags"
+                    class="pill pill-{{ hashtag.key }} d-inline fade-in"
+                >
+                    <span class="material-icons remove" (click)="deleteHashtag(hashtag.id)"
+                        >close</span
+                    >
+                    <span>#{{ hashtag.value }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container>
+    <app-fixed-widget-badge
+        modalID="modalMarkdownInfo"
+        title="How to edit model"
+        icon="help"
+        markdownSectionID="edit-model"
+        modalTitle="How to edit model"
+        markdownClass="markdown-edit-model"
+    >
+    </app-fixed-widget-badge>
+</ng-container>

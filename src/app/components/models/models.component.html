@@ -1,0 +1,15 @@
+<h2 class="mb-1">Models</h2>
+
+<div *ngIf="loading.models" class="font-size-0-8 font-bold rainbow-color">
+    <p>Hang tight while we load amazing models from the Shipped Brain community!</p>
+</div>
+
+<app-info-message
+    *ngIf="!loading.models && !models?.length"
+    type="info"
+    [content]="noModelsMessage"
+></app-info-message>
+
+<div *ngIf="models">
+    <app-model-card-grid [models]="models"></app-model-card-grid>
+</div>

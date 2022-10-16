@@ -1,0 +1,34 @@
+<span class="action-icon" (click)="openModal()">
+    <app-tooltip icon=" delete" tooltipContent="Delete comment"></app-tooltip>
+</span>
+
+<div #modalDeleteComment class="modal">
+    <div class="modal-container">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>Delete comment</h3>
+                </div>
+
+                <span class="material-icons close" (click)="closeModal()">close</span>
+            </div>
+
+            <div class="modal-body">
+                <p class="color-red font-bold">You are about to delete a comment.</p>
+                <p>
+                    By confirming this action, comment will be permanently lost. Proceed
+                    anyway?
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-solid-dark color-white" (click)="closeModal()">
+                    No, let's keep it for now
+                </button>
+                <button class="btn btn-solid-red color-white" (click)="deleteComment()">
+                    Yes, delete comment
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

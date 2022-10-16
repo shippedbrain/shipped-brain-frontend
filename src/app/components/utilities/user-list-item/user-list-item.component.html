@@ -1,0 +1,37 @@
+<a routerLink="/profiles/{{ user.username }}" class="fade-in">
+    <div class="list-item-container">
+        <!-- User -->
+        <div class="list-item-avatar-container d-inline-flex">
+            <img
+                *ngIf="user.photo; else showDefaultImage"
+                [src]="user.photo | safeHtml"
+                [alt]="user.name"
+            />
+            <ng-template #showDefaultImage>
+                <ngx-avatar name="{{ user.name }}" size="30"></ngx-avatar>
+            </ng-template>
+
+            <h3 class="avatar-title avatar-title-lg list-item-title">
+                <b>{{ user.name }}</b>
+            </h3>
+        </div>
+
+        <!-- Posted date -->
+        <span class="list-item-pre-info ml-2 float-right d-inline-flex">
+            <app-info-message
+                type="info"
+                [content]="
+                    'Member since <b>' + moment(user.created_at).format('DD MMM YYYY') + '</b>'
+                "
+                [hasIcon]="false"
+                size="xs"
+            ></app-info-message>
+        </span>
+
+        <!-- Description -->
+        <div class="list-item-body">
+            <span class="font-bold">About</span>
+            <div [innerHtml]="user.description | handleEmpty | truncate: 200"></div>
+        </div>
+    </div>
+</a>

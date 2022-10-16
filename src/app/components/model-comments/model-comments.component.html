@@ -1,0 +1,74 @@
+<ng-container *ngIf="modelName">
+    <ng-container *ngIf="isLoggedInUser">
+        <!-- Error message add comment -->
+        <app-info-message
+            *ngIf="errorMsgs.addComment"
+            type="error"
+            [content]="errorMsgs.addComment"
+        >
+        </app-info-message>
+
+        <!-- Success message add comment -->
+        <app-info-message
+            *ngIf="successMsgs.addComment"
+            type="success"
+            [content]="successMsgs.addComment"
+        >
+        </app-info-message>
+
+        <div class="form-container">
+            <div class="form-group form-group-with-buttons">
+                <label for="comment" class="form-label">Write a comment</label>
+                <textarea
+                    id="comment"
+                    class="form-control"
+                    [ngClass]="{ expanded: isTextareaExpanded }"
+                    [(ngModel)]="comment"
+                    (click)="expandTextarea()"
+                ></textarea>
+
+                <div class="form-button-group" [ngClass]="{ hidden: !isTextareaExpanded }">
+                    <button class="btn btn-solid-dark color-white" (click)="shrinkTextarea()">
+                        Cancel
+                    </button>
+                    <button
+                        class="btn btn-solid-magenta color-white"
+                        [disabled]="!comment"
+                        (click)="addComment()"
+                    >
+                        Comment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <app-info-message
+        *ngIf="!isLoggedInUser"
+        type="info"
+        content="You must login to be able to add a comment to this model"
+    ></app-info-message>
+
+    <div *ngIf="modelComments" class="mt-2">
+        <ng-container *ngFor="let comment of modelComments">
+            <app-model-comment
+                [modelComment]="comment"
+                [currentUser]="currentUser"
+                (triggerGetComments)="onTriggerGetComments()"
+            ></app-model-comment>
+        </ng-container>
+
+        <div
+            *ngIf="loading.getComments"
+            class="d-flex justify-content-center rainbow-color mt-2"
+        >
+            <app-loading-icon additionalClasses="font-size-3"></app-loading-icon>
+        </div>
+
+        <div *ngIf="!loading.getComments && showLoadMore" class="my-3 text-center">
+            <button class="btn btn-solid-magenta btn-sm color-white" (click)="loadMore()">
+                Load More
+            </button>
+        </div>
+    </div>
+</ng-container>

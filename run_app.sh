@@ -1,0 +1,1 @@
+clear && ng serve --open

@@ -1,0 +1,15 @@
+<div class="tab" [ngClass]="{ 'no-padding': noPadding }">
+    <button
+        *ngFor="let tab of tabs"
+        class="tab-link"
+        [ngClass]="{ active: tab.active, 'font-size-0-9': tabsLg }"
+        (click)="selectTab(tab)"
+    >
+        {{ tab.tabTitle }}
+        <span *ngIf="tab.showBadge" class="tab-badge">{{ tab.badgeContent }}</span>
+    </button>
+</div>
+
+<hr *ngIf="showSeparator" class="tab-separator" />
+
+<ng-content></ng-content>

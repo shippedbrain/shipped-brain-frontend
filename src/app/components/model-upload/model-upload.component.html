@@ -1,0 +1,95 @@
+<div>
+    <!-- Upload Title -->
+    <div class="showcase-info-container text-center color-magenta">
+        <div class="title-container">
+            <span class="title">Deploy Model</span>
+        </div>
+    </div>
+
+    <div class="font-size-0-9">
+        Please upload a zip file containing your model below. You can also
+        <a
+            href="https://gitlab.com/bernardolemos/shipped-brain-template"
+            target="_blank"
+            class="link"
+            >clone a project template</a
+        >
+        or check a
+        <a
+            href="https://gitlab.com/bernardolemos/shipped-brain-quickstart-1-scikit-learn"
+            target="_blank"
+            class="link"
+            >quick start guide</a
+        >.
+    </div>
+
+    <div class="mb-1 d-flex align-items-center color-magenta-dark">
+        <small
+            >Your upload may take several minutes to complete while the model is being
+            registered.</small
+        >
+    </div>
+
+    <div class="form-container">
+        <div class="form-group">
+            <input
+                type="file"
+                id="file"
+                class="form-input"
+                accept="application/zip"
+                (change)="changedFile($event.target.files)"
+            />
+            <label for="file">
+                <span class="material-icons">attach_file</span>
+                <span>Choose a zip file</span>
+            </label>
+
+            <small *ngIf="fileUpload" class="color-grey-darkened font-size-0-8">{{
+                fileUpload.name
+            }}</small>
+        </div>
+
+        <div class="form-group">
+            <label for="file-description" class="form-label">Description</label>
+            <textarea
+                id="file-description"
+                rows="8"
+                class="form-control"
+                [(ngModel)]="modelDescription"
+            ></textarea>
+        </div>
+
+        <!-- Error message -->
+        <app-info-message
+            *ngIf="errorMsg"
+            type="error"
+            [content]="errorMsg"
+        ></app-info-message>
+
+        <!-- Success message -->
+        <app-info-message
+            *ngIf="successMsg"
+            type="success"
+            [content]="successMsg"
+        ></app-info-message>
+
+        <button
+            class="btn btn-solid-magenta color-white"
+            [ngClass]="{ 'btn-loading': loading.modelUpload }"
+            (click)="uploadModel()"
+        >
+            <span *ngIf="!loading.modelUpload">Upload</span>
+            <app-loading-icon *ngIf="loading.modelUpload"></app-loading-icon>
+        </button>
+    </div>
+</div>
+
+<app-fixed-widget-badge
+    modalID="modalMarkdownInfo"
+    title="How do I deploy a model?"
+    icon="help"
+    markdownSectionID="deploy-model"
+    modalTitle="How to deploy a model"
+    markdownClass="markdown-deploy-model"
+>
+</app-fixed-widget-badge>

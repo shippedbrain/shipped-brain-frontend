@@ -1,0 +1,480 @@
+<div class="showcase">
+    <div class="showcase-title-container">
+        <!-- Name -->
+        <span *ngIf="model" class="showcase-title mt-0-imp">
+            <div
+                class="d-flex justify-content-space-between align-items-center flex-sm-column"
+            >
+                <div
+                    class="
+                        d-flex
+                        justify-content-flex-start
+                        align-items-baseline
+                        flex-sm-column
+                    "
+                >
+                    <div
+                        class="
+                            showcase-title-container
+                            d-flex
+                            justify-content-flex-start
+                            align-items-center
+                        "
+                    >
+                        <img
+                            *ngIf="model.cover_photo; else showDefaultImage"
+                            [src]="model.cover_photo | safeHtml"
+                            class="showcase-img"
+                        />
+                        <ng-template #showDefaultImage>
+                            <img
+                                src="assets/img/model_default.jpg"
+                                [alt]="model.name"
+                                class="showcase-img"
+                            />
+                        </ng-template>
+
+                        <span>{{ model.name }}</span>
+                    </div>
+
+                    <div
+                        class="heart-toggle-container mx-1"
+                        [ngClass]="{ active: hasLikedModel }"
+                    >
+                        <span class="material-icons heart-toggle" (click)="toggleLike()">{{
+                            hasLikedModel ? "favorite" : "favorite_border"
+                        }}</span>
+                        <span class="heart-toggle-label">{{ modelLikes }}</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <!-- Edit button -->
+                    <a
+                        *ngIf="isLoggedInUser"
+                        routerLink="/models/{{ model.name }}/edit"
+                        class="btn btn-solid-magenta btn-sm color-white mr-1 align-self-center"
+                    >
+                        <span>Edit Model</span>
+                    </a>
+                </div>
+            </div>
+        </span>
+
+        <!-- Deployed -->
+        <div *ngIf="model" class="font-size-0-8 color-grey-darkened mt-1">
+            <span class="color-grey font-normal">Deployed</span>
+            {{ moment(model.creation_time).format("DD MMM YYYY") }}
+        </div>
+
+        <!-- Model category -->
+        <div *ngIf="model && model.hashtags.length" class="my-1">
+            <a
+                *ngFor="let hashtag of model.hashtags"
+                routerLink="/search"
+                [queryParams]="{ for: hashtag.value | getFriendlyUrl }"
+                class="pill pill-{{ hashtag.key }} mb-0-imp"
+            >
+                <span *ngIf="hashtag.key === 'hashtag'">#</span>
+                {{ hashtag.value }}
+            </a>
+        </div>
+
+        <!-- User -->
+        <a
+            *ngIf="model"
+            routerLink="/profiles/{{ model.user ? model.user.username : model.user_id }}"
+            class="d-inline-block"
+        >
+            <div class="showcase-link">
+                <ngx-avatar name="{{ model.user.name }}"></ngx-avatar>
+                <span class="showcase-link-text">{{
+                    model.user ? model.user.name : model.user_id
+                }}</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Main Tabs -->
+    <div *ngIf="model" class="showcase-section mt-2 p-0-imp">
+        <tabs [tabsLg]="true" [showSeparator]="true" (tabClicked)="triggerGetComments($event)">
+            <!-- Model Card -->
+            <tab tabTitle="Model Card" [spaced]="true">
+                <div *ngIf="model.model_card; else noModelCard">
+                    <div class="my-1">
+                        <a
+                            [href]="model.github_repo"
+                            target="_blank"
+                            class="btn btn-solid-dark btn-with-img color-white"
+                        >
+                            <img
+                                src="/assets/img/GitHub/GitHub-Mark-Light-120px-plus.png"
+                                class="btn-img"
+                            />
+                            <span>GitHub Repository</span>
+                        </a>
+                    </div>
+
+                    <app-markdown
+                        [file]="model.model_card"
+                        [isRawString]="true"
+                        [showNavigation]="false"
+                        [imagesBaseURL]="'https://' + model.github_repo_files_url"
+                    >
+                    </app-markdown>
+                </div>
+
+                <ng-template #noModelCard>
+                    <app-info-message
+                        type="info"
+                        content="Model Card is not available yet"
+                    ></app-info-message>
+                </ng-template>
+            </tab>
+
+            <!-- API -->
+            <tab tabTitle="API" [spaced]="true">
+                <!-- Try the model -->
+                <div *ngIf="model && model.version">
+                    <!-- API endpoint -->
+                    <span class="showcase-section-title font-size-1-2 mb-1">API Endpoint</span>
+                    <div class="code-container">
+                        <pre id="apiEndpoint" class="p-0-imp font-size-0-9 code">{{
+                            apiEndpoint
+                        }}</pre>
+                        <div class="options-container">
+                            <span
+                                class="material-icons option tooltip"
+                                title="Copy"
+                                data-target="apiEndpoint"
+                                data-target-tooltip="tooltipApiEndpoint"
+                                (click)="copyToClipboard($event)"
+                            >
+                                content_copy
+                            </span>
+                        </div>
+                    </div>
+
+                    <span class="showcase-section-title mt-1 mb-0-imp"
+                        >Try {{ model.name }}</span
+                    >
+
+                    <!-- Tab pills -->
+                    <div class="row align-items-flex-end mb-1">
+                        <div class="col-6 col-sm-12">
+                            <tabs [noPadding]="true">
+                                <!-- JSON -->
+                                <tab tabTitle="JSON" [noPadding]="true">
+                                    <div class="code-container">
+                                        <div
+                                            id="jsonExamplePre"
+                                            class="font-size-0-8 code prettyprint-fit-height"
+                                        >
+                                            <pre>{{ modelEditExample }}</pre>
+                                        </div>
+                                        <div class="options-container">
+                                            <span
+                                                class="material-icons option tooltip"
+                                                title="Copy"
+                                                data-target="jsonExamplePre"
+                                                data-target-tooltip="tooltipJsonExamplePre"
+                                                (click)="copyToClipboard($event)"
+                                            >
+                                                content_copy
+                                            </span>
+                                        </div>
+                                    </div>
+                                </tab>
+
+                                <!-- cURL -->
+                                <tab tabTitle="cURL" [noPadding]="true">
+                                    <div class="code-container">
+                                        <div
+                                            id="curlExamplePre"
+                                            class="font-size-0-8 code prettyprint-fit-height"
+                                        >
+                                            <pre>{{ curlExample }}<span *ngIf="curlExample"> </span>{{ modelEditExample }}</pre>
+                                        </div>
+                                        <div class="options-container">
+                                            <span
+                                                class="material-icons option tooltip"
+                                                title="Copy"
+                                                data-target="curlExamplePre"
+                                                data-target-tooltip="tooltipCurlExamplePre"
+                                                (click)="copyToClipboard($event)"
+                                            >
+                                                content_copy
+                                            </span>
+                                        </div>
+                                    </div>
+                                </tab>
+
+                                <!-- Edit -->
+                                <tab tabTitle="Edit Values" [noPadding]="true">
+                                    <div class="form-container my-0-imp">
+                                        <div class="form-group my-0-imp code-container">
+                                            <textarea
+                                                id="modelEditExample"
+                                                rows="5"
+                                                class="form-control code code-light mt-0-imp"
+                                                [innerText]="modelEditExample"
+                                                [(ngModel)]="modelEditExample"
+                                            ></textarea>
+                                            <div class="options-container">
+                                                <span
+                                                    id="copyJSONTooltip"
+                                                    title="Copy"
+                                                    class="
+                                                        material-icons
+                                                        option option-dark
+                                                        tooltip
+                                                    "
+                                                    data-target="modelEditExample"
+                                                    data-target-tooltip="tooltipmodelEditExample"
+                                                    (click)="copyToClipboard($event)"
+                                                >
+                                                    content_copy
+                                                </span>
+                                                <span
+                                                    class="
+                                                        material-icons
+                                                        option option-dark
+                                                        tooltip
+                                                    "
+                                                    title="Reset"
+                                                    data-original="jsonExamplePre"
+                                                    data-target="modelEditExample"
+                                                    (click)="clearArea($event)"
+                                                >
+                                                    backspace
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tab>
+                            </tabs>
+                        </div>
+
+                        <div class="col-6 col-sm-12">
+                            <span class="d-block font-size-1 font-bold mt-1"
+                                >Prediction response</span
+                            >
+
+                            <div class="code-container">
+                                <pre
+                                    *ngIf="model"
+                                    id="predictionResponse"
+                                    class="font-size-0-8 code prettyprint-fit-height"
+                                    >{{ predictionResponse | nl2br }}</pre
+                                >
+                                <div class="options-container">
+                                    <span
+                                        class="material-icons option tooltip"
+                                        title="Copy"
+                                        data-target="predictionResponse"
+                                        data-target-tooltip="predictionResponseTooltip"
+                                        (click)="copyToClipboard($event)"
+                                    >
+                                        content_copy
+                                    </span>
+                                    <span
+                                        class="material-icons option tooltip"
+                                        title="Clear"
+                                        data-original=""
+                                        data-target="predictionResponse"
+                                        (click)="clearArea($event)"
+                                    >
+                                        backspace
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="errors.tryModel">
+                        <app-info-message
+                            type="error"
+                            [content]="errors.tryModel"
+                        ></app-info-message>
+                    </ng-container>
+
+                    <!-- Try button -->
+                    <button
+                        class="btn btn-solid-magenta color-white"
+                        [ngClass]="{ 'btn-loading': loading.tryModel }"
+                        [disabled]="loading.tryModel || !hasCurrentUser()"
+                        (click)="tryModel()"
+                    >
+                        <span *ngIf="!loading.tryModel">Try it</span>
+                        <app-loading-icon *ngIf="loading.tryModel"></app-loading-icon>
+                    </button>
+
+                    <!-- API calls info -->
+                    <div class="font-size-0-8 color-grey mt-0-5">
+                        <!-- Not logged in -->
+                        <span *ngIf="!currentUser.name"
+                            >Please
+                            <a routerLink="/login" class="link link-magenta">login</a> to try
+                            this model</span
+                        >
+                    </div>
+                </div>
+
+                <ng-container *ngIf="!model.version">
+                    <app-info-message
+                        type="info"
+                        content="API is not available as this model was not deployed"
+                    >
+                    </app-info-message>
+                </ng-container>
+            </tab>
+
+            <!-- Metrics -->
+            <tab tabTitle="Metrics" [spaced]="true">
+                <div *ngIf="metrics; else noMetrics" class="code-container">
+                    <div id="modelMetrics" class="font-size-0-8 code prettyprint-fit-height">
+                        <pre>{{ metrics }}</pre>
+                    </div>
+                </div>
+
+                <ng-template #noMetrics>
+                    <app-info-message
+                        type="info"
+                        content="Metrics are not yet available"
+                    ></app-info-message>
+                </ng-template>
+            </tab>
+
+            <!-- Parameters -->
+            <tab tabTitle="Parameters" [spaced]="true">
+                <div *ngIf="parameters; else noParameters" class="code-container">
+                    <div
+                        id="modelParameters"
+                        class="font-size-0-8 code prettyprint-fit-height"
+                    >
+                        <pre>{{ parameters }}</pre>
+                    </div>
+                </div>
+
+                <ng-template #noParameters>
+                    <app-info-message
+                        type="info"
+                        content="Parameters are not yet available"
+                    ></app-info-message>
+                </ng-template>
+            </tab>
+
+            <!-- Input Example -->
+            <tab tabTitle="Input Example" [spaced]="true">
+                <div *ngIf="inputExample; else noInputExample" class="code-container">
+                    <div id="inputExample" class="font-size-0-8 code prettyprint-fit-height">
+                        <pre>{{ inputExample }}</pre>
+                    </div>
+                </div>
+
+                <ng-template #noInputExample>
+                    <app-info-message
+                        type="info"
+                        content="Input example is not yet available"
+                    ></app-info-message>
+                </ng-template>
+            </tab>
+
+            <!-- Signature -->
+            <tab tabTitle="Signature" [spaced]="true">
+                <ng-container *ngIf="signature.inputs || signature.outputs; else noSignature">
+                    <ng-container *ngIf="signature.inputs">
+                        <div class="mt-1">
+                            <span class="showcase-section-title">Inputs</span>
+                        </div>
+
+                        <div class="code-container mb-2">
+                            <div id="modelSignatureInputs" class="font-size-0-8 code">
+                                <pre>{{ signature.inputs }}</pre>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="signature.outputs">
+                        <div class="mt-1">
+                            <span class="showcase-section-title">Outputs</span>
+                        </div>
+
+                        <div class="code-container">
+                            <div id="modelSignatureOutputs" class="font-size-0-8 code">
+                                <pre>{{ signature.outputs }}</pre>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+
+                <ng-template #noSignature>
+                    <app-info-message
+                        type="info"
+                        content="Signature is not yet available"
+                    ></app-info-message>
+                </ng-template>
+            </tab>
+
+            <!-- Comments -->
+            <tab
+                tabTitle="Comments"
+                [showBadge]="true"
+                [badgeContent]="model.comment_count"
+                [spaced]="true"
+            >
+                <app-model-comments
+                    *ngIf="getComments"
+                    [modelName]="model.name"
+                    [currentUser]="currentUser"
+                    (updateCommentCount)="getCommentCount()"
+                >
+                </app-model-comments>
+            </tab>
+
+            <!-- Stats -->
+            <tab tabTitle="Stats" [spaced]="true">
+                <ng-container *ngIf="model && model.version">
+                    <app-stat-info
+                        [name]="'API Call'"
+                        [value]="model.api_calls"
+                    ></app-stat-info>
+
+                    <!-- Chart -->
+                    <div class="mt-1 mb-2">
+                        <span class="showcase-section-title">Usage</span>
+
+                        <div class="canvas-container canvas-container-fixed-h">
+                            <canvas id="chartUsage"></canvas>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="!model.version">
+                    <app-info-message
+                        type="info"
+                        content="Stats are not available as this model was not deployed"
+                    >
+                    </app-info-message>
+                </ng-container>
+            </tab>
+        </tabs>
+    </div>
+
+    <!-- Share buttons -->
+    <div *ngIf="model" class="mt-4 mb-2">
+        <app-share-group [targetName]="model.name"></app-share-group>
+    </div>
+</div>
+
+<ng-container *ngIf="model">
+    <app-fixed-widget-badge
+        modalID="modalMarkdownInfo"
+        title="How to try model"
+        icon="help"
+        markdownSectionID="make-predictions"
+        modalTitle="How to make predictions"
+        markdownClass="markdown-make-predictions"
+    >
+    </app-fixed-widget-badge>
+</ng-container>

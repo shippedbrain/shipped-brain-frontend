@@ -1,0 +1,93 @@
+<div class="card-container">
+    <a routerLink="/models/{{ model.name }}">
+        <div class="card fade-in pb-0">
+            <div class="card-title-container">
+                <img
+                    *ngIf="model.cover_photo; else showDefaultImage"
+                    [src]="model.cover_photo | safeHtml"
+                    class="card-title-img"
+                />
+                <ng-template #showDefaultImage>
+                    <img
+                        src="assets/img/model_default.jpg"
+                        [alt]="model.name"
+                        class="card-title-img"
+                    />
+                </ng-template>
+
+                <div class="card-name-container">
+                    <span class="card-name">{{ model.name }}</span>
+                </div>
+            </div>
+
+            <div class="card-date">{{ moment(model.creation_time).format("D MMM YYYY") }}</div>
+
+            <div class="card-content">
+                <p
+                    class="card-description"
+                    [innerText]="model.description | handleEmpty | truncate"
+                ></p>
+
+                <div class="card-content-bottom px-2 pb-1">
+                    <a
+                        *ngFor="let category of modelCategories"
+                        class="pill pill-sm mb-0-imp"
+                        >{{ category.value }}</a
+                    >
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <div *ngIf="model" class="card-user-info-container">
+        <a routerLink="/profiles/{{ model.user.username }}">
+            <div class="card-user-info-img-container">
+                <img
+                    *ngIf="model.user.photo; else showDefaultImage"
+                    [src]="model.user.photo | safeHtml"
+                    [alt]="model.user.name"
+                />
+                <ng-template #showDefaultImage>
+                    <ngx-avatar name="{{ model.user.name }}"></ngx-avatar>
+                </ng-template>
+
+                <span class="card-user-info-title">{{
+                    model.user ? model.user.name : model.user_id
+                }}</span>
+            </div>
+        </a>
+
+        <div class="card-user-info-secondary-container">
+            <span class="card-user-info-content">
+                <app-tooltip
+                    [icon]="model.likes.has_liked_model ? 'favorite' : 'favorite_border'"
+                    [titleContent]="model.likes.count"
+                    [tooltipContent]="
+                        model.likes.count + ' like' + (model.likes.count | handlePluralization)
+                    "
+                    [class]="
+                        model.likes.has_liked_model ? 'color-crimson' : 'color-grey-darkened'
+                    "
+                ></app-tooltip>
+                <app-tooltip
+                    icon="equalizer"
+                    [titleContent]="model.api_calls"
+                    [tooltipContent]="
+                        model.api_calls + ' API Call' + (model.api_calls | handlePluralization)
+                    "
+                >
+                </app-tooltip>
+                <app-tooltip
+                    icon="comment"
+                    [titleContent]="model.comment_count"
+                    [tooltipContent]="
+                        model.comment_count +
+                        ' Comment' +
+                        (model.comment_count | handlePluralization)
+                    "
+                >
+                </app-tooltip>
+            </span>
+        </div>
+    </div>
+</div>

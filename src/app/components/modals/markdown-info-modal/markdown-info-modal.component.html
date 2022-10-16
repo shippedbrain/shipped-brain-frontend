@@ -1,0 +1,28 @@
+<div [id]="modalID" class="modal">
+    <div class="modal-container">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3>{{ modalTitle }}</h3>
+                </div>
+
+                <span class="material-icons close" (click)="closeModal()">close</span>
+            </div>
+
+            <div class="modal-body">
+                <div class="markdown" [ngClass]="markdownClass">
+                    <markdown
+                        [src]="'/assets/pages/FAQs.md'"
+                        (ready)="onMarkdownReady()"
+                    ></markdown>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-solid-dark color-white" (click)="closeModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

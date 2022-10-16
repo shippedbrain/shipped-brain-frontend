@@ -1,0 +1,257 @@
+<div>
+    <!-- Edit Title -->
+    <div class="showcase-info-container text-center color-magenta">
+        <div
+            class="
+                title-container
+                d-flex
+                justify-content-space-between
+                align-items-center
+                w-100
+            "
+        >
+            <span class="title">Edit profile</span>
+            <a
+                *ngIf="user"
+                routerLink="/profiles/{{ user.username }}"
+                class="btn btn-solid-magenta color-white btn-sm"
+                >See profile page</a
+            >
+        </div>
+    </div>
+
+    <div *ngIf="user" class="form-container">
+        <!-- Image -->
+        <div class="form-group">
+            <div class="mb-1">
+                <img
+                    *ngIf="userPhoto; else showDefaultImage"
+                    [src]="userPhoto | safeHtml"
+                    class="img-thumbnail lg"
+                />
+                <ng-template #showDefaultImage>
+                    <ngx-avatar name="{{ user.name }}" class="img-thumbnail lg"></ngx-avatar>
+                </ng-template>
+            </div>
+
+            <!-- Error message image upload -->
+            <app-info-message
+                *ngIf="errorMsgs.uploadImage"
+                type="error"
+                [content]="errorMsgs.uploadImage"
+            >
+            </app-info-message>
+
+            <!-- Success message image upload -->
+            <app-info-message
+                *ngIf="successMsgs.uploadImage"
+                type="success"
+                [content]="successMsgs.uploadImage"
+            >
+            </app-info-message>
+
+            <input
+                type="file"
+                id="file"
+                class="form-input"
+                accept="image/png, image/jpeg, image/gif"
+                (change)="uploadImage($event)"
+            />
+            <label for="file">
+                <span class="material-icons">insert_photo</span>
+                <span>Upload a photo</span>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label class="font-size-1-2 font-bold color-dark d-block">Your Info</label>
+        </div>
+
+        <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input
+                type="text"
+                id="name"
+                class="form-control"
+                [(ngModel)]="user.name"
+                (keyup.enter)="updateProfile()"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="form-label">About</label>
+            <textarea
+                id="description"
+                rows="5"
+                class="form-control"
+                [(ngModel)]="user.description"
+                (keyup.enter)="updateProfile()"
+            ></textarea>
+        </div>
+
+        <!-- Error message user -->
+        <app-info-message
+            *ngIf="errorMsgs.user"
+            type="error"
+            [content]="errorMsgs.user"
+        ></app-info-message>
+
+        <!-- Success message user -->
+        <app-info-message
+            *ngIf="successMsgs.user"
+            type="success"
+            [content]="successMsgs.user"
+        ></app-info-message>
+
+        <button
+            class="btn btn-solid-magenta color-white"
+            [ngClass]="{ 'btn-loading': loading.profileUpdate }"
+            [disabled]="loading.profileUpdate"
+            (click)="updateProfile()"
+        >
+            <span *ngIf="!loading.profileUpdate">Update</span>
+            <app-loading-icon *ngIf="loading.profileUpdate"></app-loading-icon>
+        </button>
+
+        <hr />
+
+        <div class="form-group">
+            <label class="font-size-1-2 font-bold color-dark d-block">Password</label>
+            <label class="font-size-0-8 color-grey-darkened"
+                >After updating your password, we'll redirect you to the login page and you'll
+                be able to log in with the new password.</label
+            >
+
+            <div class="row">
+                <div class="col-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="new-password" class="form-label">New password</label>
+                        <input
+                            type="password"
+                            id="new-password"
+                            class="form-control"
+                            [(ngModel)]="user.new_password"
+                            (keyup.enter)="updatePassword()"
+                        />
+                    </div>
+                </div>
+                <div class="col-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="new-password-confirm" class="form-label"
+                            >Confirm password</label
+                        >
+                        <input
+                            type="password"
+                            id="new-password-confirm"
+                            class="form-control"
+                            [(ngModel)]="user.new_password_confirm"
+                            (keyup.enter)="updatePassword()"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error message password -->
+            <app-info-message
+                *ngIf="errorMsgs.password"
+                type="error"
+                [content]="errorMsgs.password"
+            ></app-info-message>
+
+            <!-- Success message password -->
+            <app-info-message
+                *ngIf="successMsgs.password"
+                type="success"
+                [content]="successMsgs.password"
+            >
+            </app-info-message>
+
+            <button
+                class="btn btn-solid-magenta color-white"
+                [ngClass]="{ 'btn-loading': loading.passwordUpdate }"
+                [disabled]="loading.passwordUpdate"
+                (click)="updatePassword()"
+            >
+                <span *ngIf="!loading.passwordUpdate">Save password</span>
+                <app-loading-icon *ngIf="loading.passwordUpdate"></app-loading-icon>
+            </button>
+        </div>
+
+        <hr />
+
+        <!-- Hashtags -->
+        <div class="form-group">
+            <label class="font-size-1-2 font-bold color-dark d-block">Hashtags</label>
+            <label class="font-size-0-8 color-grey-darkened"
+                >Hashtags are a great way to make your profile and models easily discoverable
+                by the Shipped Brain community.</label
+            >
+
+            <label class="form-label d-block mt-1">
+                Add hashtags <span class="font-normal color-grey-darkened">(up to 3)</span>
+            </label>
+
+            <!-- Add hashtag -->
+            <div class="form-input-combo">
+                <span class="input-pre-item">
+                    <span>#</span>
+                </span>
+                <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="newHashtag"
+                    (keyup.enter)="addHashtag()"
+                />
+                <button
+                    type="button"
+                    class="form-input-btn"
+                    [ngClass]="{ 'btn-loading': loading.addHashtag }"
+                    [disabled]="!newHashtag"
+                    (click)="addHashtag()"
+                >
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+
+            <!-- Hashtag list -->
+            <div class="pill-container mt-1">
+                <span
+                    *ngFor="let hashtag; let i = index; of: userHashtags"
+                    class="pill pill-{{ hashtag.key }} d-inline fade-in"
+                >
+                    <span class="material-icons remove" (click)="deleteHashtag(hashtag.id)"
+                        >close</span
+                    >
+                    <span>#{{ hashtag.value }}</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Error message hashtag -->
+        <app-info-message
+            *ngIf="errorMsgs.hashtags"
+            type="error"
+            [content]="errorMsgs.hashtags"
+        ></app-info-message>
+
+        <!-- Success message hashtag -->
+        <app-info-message
+            *ngIf="successMsgs.hashtags"
+            type="success"
+            [content]="successMsgs.hashtags"
+        >
+        </app-info-message>
+    </div>
+</div>
+
+<ng-container *ngIf="user">
+    <app-fixed-widget-badge
+        modalID="modalMarkdownInfo"
+        title="How to edit your profile"
+        icon="help"
+        markdownSectionID="edit-profile"
+        modalTitle="How to edit your profile"
+        markdownClass="markdown-edit-profile"
+    >
+    </app-fixed-widget-badge>
+</ng-container>
